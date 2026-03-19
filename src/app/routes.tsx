@@ -20,6 +20,4 @@ export const router = createBrowserRouter([
       { path: '*', Component: NotFound },
     ],
   },
-],{
-  basename: '/Direto-do-Campo/',
-});
+]);
