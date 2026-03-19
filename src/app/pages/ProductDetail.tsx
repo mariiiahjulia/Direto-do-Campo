@@ -14,56 +14,58 @@ export function ProductDetail() {
     return <Navigate to="/produtos" replace />;
   }
 
-  const relatedProducts = getRelatedProducts(product.id);
+  const relatedProducts = getRelatedProducts(product.id)
+    .sort((a, b) => Math.ceil(a.name.length / 30) - Math.ceil(b.name.length / 30));
   const images = product.images || [product.image];
   const whatsappMessage = `Oi, gostaria de encomendar: ${product.name}`;
-  const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappUrl = `https://wa.me/5544999763686?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
-    <div className="min-h-screen pt-32 pb-16">
-      <SEO 
-        title={product.name} 
+    <div className="min-h-screen pt-32 pb-16" style={{ backgroundColor: '#F7F3E9' }}>
+      <SEO
+        title={product.name}
         description={product.description}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="mb-8 text-sm">
-          <Link to="/" className="text-[#4ECDC4] hover:underline">Home</Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <Link to="/produtos" className="text-[#4ECDC4] hover:underline">Produtos</Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-gray-600">{product.name}</span>
+        <nav className="mb-8 text-xs" style={{ color: '#8a6a55' }}>
+          <Link to="/" className="hover:underline" style={{ color: '#2F6F4F' }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link to="/produtos" className="hover:underline" style={{ color: '#2F6F4F' }}>Produtos</Link>
+          <span className="mx-2">/</span>
+          <span>{product.name}</span>
         </nav>
 
         {/* Back Button */}
         <Link
           to="/produtos"
-          className="inline-flex items-center gap-2 text-[#4ECDC4] hover:underline mb-8"
+          className="inline-flex items-center gap-2 mb-8 font-medium text-sm transition-colors hover:underline"
+          style={{ color: '#2F6F4F' }}
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={18} />
           Voltar para Produtos
         </Link>
 
         {/* Product Detail */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Images */}
-          <div>
-            <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4">
+          <div className="lg:max-w-xs mx-auto w-4/5 sm:w-3/5 lg:w-full">
+            <div className="aspect-square bg-[#EDE6D6] rounded-2xl overflow-hidden mb-4">
               <img
                 src={images[selectedImage]}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
             </div>
-            
+
             {images.length > 1 && (
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-4 gap-3">
                 {images.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImage === index ? 'border-[#4ECDC4]' : 'border-transparent'
+                    className={`aspect-square bg-[#EDE6D6] rounded-xl overflow-hidden border-2 transition-colors ${
+                      selectedImage === index ? 'border-[#2F6F4F]' : 'border-transparent'
                     }`}
                   >
                     <img
@@ -80,56 +82,54 @@ export function ProductDetail() {
           {/* Info */}
           <div>
             <div className="mb-4">
-              <span className="inline-block text-xs uppercase bg-gray-100 text-gray-600 px-3 py-1 rounded">
+              <span
+                className="inline-block text-xs uppercase px-3 py-1 rounded-[30px] font-medium"
+                style={{ backgroundColor: 'rgba(47,111,79,0.1)', color: '#2F6F4F' }}
+              >
                 {product.category}
               </span>
             </div>
 
-            <h1 className="text-3xl md:text-4xl text-[#FF6B35] mb-4">
+            <h1
+              className="text-3xl md:text-4xl mb-4"
+              style={{ fontFamily: "'Playfair Display', serif", color: '#4A2E1F' }}
+            >
               {product.name}
             </h1>
 
-            <p className="text-gray-700 text-lg mb-6">
+            <p className="text-base mb-6 leading-relaxed" style={{ color: '#6b4f3a' }}>
               {product.detailedDescription}
             </p>
 
-            <div className="bg-gray-50 rounded-lg p-6 mb-6">
-              <div className="text-4xl text-[#FF6B35] mb-2">
-                R$ {product.price.toFixed(2).replace('.', ',')}
-              </div>
-              <p className="text-gray-600 text-sm">Produto artesanal | Peso aproximado</p>
+            <div
+              className="rounded-xl p-5 mb-6 text-sm"
+              style={{ backgroundColor: '#EDE6D6', color: '#8a6a55' }}
+            >
+              Produto artesanal | Consulte o valor no WhatsApp.
             </div>
 
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 w-full bg-[#25D366] text-white px-8 py-4 rounded-lg hover:bg-[#20BD5A] transition-colors text-lg mb-8"
+              className="flex items-center justify-center gap-3 w-full bg-[#25D366] hover:bg-[#20BD5A] text-white px-8 py-4 rounded-[30px] transition-colors text-base font-semibold mb-8"
             >
-              <MessageCircle size={24} />
+              <MessageCircle size={22} />
               Encomendar via WhatsApp
             </a>
 
-            {/* Ingredients */}
-            <div className="mb-6">
-              <h2 className="text-xl text-gray-900 mb-3">Ingredientes</h2>
-              <ul className="space-y-2">
-                {product.ingredients.map((ingredient, index) => (
-                  <li key={index} className="flex items-start gap-2 text-gray-700">
-                    <Check className="text-[#4ECDC4] mt-0.5 flex-shrink-0" size={20} />
-                    <span>{ingredient}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             {/* Benefits */}
             <div>
-              <h2 className="text-xl text-gray-900 mb-3">Por que escolher?</h2>
+              <h2
+                className="text-xl mb-3"
+                style={{ fontFamily: "'Playfair Display', serif", color: '#4A2E1F' }}
+              >
+                Por que escolher?
+              </h2>
               <ul className="space-y-2">
                 {product.benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-start gap-2 text-gray-700">
-                    <Check className="text-[#4ECDC4] mt-0.5 flex-shrink-0" size={20} />
+                  <li key={index} className="flex items-start gap-2" style={{ color: '#6b4f3a' }}>
+                    <Check className="mt-0.5 flex-shrink-0" size={18} style={{ color: '#2F6F4F' }} />
                     <span>{benefit}</span>
                   </li>
                 ))}
@@ -141,8 +141,13 @@ export function ProductDetail() {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <section>
-            <h2 className="text-3xl text-gray-900 mb-8">Produtos Relacionados</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <h2
+              className="text-2xl md:text-3xl mb-8"
+              style={{ fontFamily: "'Playfair Display', serif", color: '#4A2E1F' }}
+            >
+              Produtos Relacionados
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
               {relatedProducts.map((relatedProduct) => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} />
               ))}

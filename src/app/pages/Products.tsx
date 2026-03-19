@@ -1,118 +1,145 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { ProductCard } from '../components/ProductCard';
 import { SEO } from '../components/SEO';
 import { products } from '../data/products';
 
+const estimatedTitleLines = (name: string) => Math.ceil(name.length / 30);
+
+const normalize = (str: string) =>
+  str.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+
+const categories = [
+  { value: 'all', label: 'Todos' },
+  { value: 'queijos', label: 'Queijos' },
+  { value: 'doces', label: 'Doces' },
+  { value: 'combos', label: 'Combos' },
+];
+
 export function Products() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<'all' | 'queijos' | 'doces'>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'price-asc' | 'price-desc'>('name');
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'queijos' | 'doces' | 'combos'>('all');
 
   const filteredAndSortedProducts = products
     .filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           product.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const words = normalize(searchQuery).split(/\s+/).filter(Boolean);
+      const matchesSearch =
+        words.length === 0 ||
+        words.every(
+          (word) =>
+            normalize(product.name).includes(word) ||
+            normalize(product.description).includes(word)
+        );
       const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
       return matchesSearch && matchesCategory;
     })
-    .sort((a, b) => {
-      if (sortBy === 'name') return a.name.localeCompare(b.name);
-      if (sortBy === 'price-asc') return a.price - b.price;
-      if (sortBy === 'price-desc') return b.price - a.price;
-      return 0;
-    });
+    .sort((a, b) => estimatedTitleLines(a.name) - estimatedTitleLines(b.name));
 
   return (
-    <div className="min-h-screen pt-32 pb-16">
-      <SEO 
-        title="Produtos" 
+    <div className="min-h-screen pt-32 pb-16" style={{ backgroundColor: '#F7F3E9' }}>
+      <SEO
+        title="Produtos"
         description="Explore nossa linha completa de queijos e doces artesanais. Produtos frescos e naturais, feitos com amor."
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8 text-sm">
-          <Link to="/" className="text-[#4ECDC4] hover:underline">Home</Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-gray-600">Produtos</span>
+
+        <nav className="mb-8 text-xs" style={{ color: '#8a6a55' }}>
+          <Link to="/" className="hover:underline" style={{ color: '#2F6F4F' }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Produtos</span>
         </nav>
 
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl text-gray-900 mb-4">
+ 
+        <div className="mb-10">
+          <p
+            className="text-xs uppercase tracking-[0.2em] mb-2 font-medium"
+            style={{ color: '#6FBF8A' }}
+          >
+            Feitos com amor na fazenda
+          </p>
+          <h1
+            className="text-4xl md:text-5xl mb-3"
+            style={{ fontFamily: "'Playfair Display', serif", color: '#4A2E1F' }}
+          >
             Nossos Produtos
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-base" style={{ color: '#7a5c48' }}>
             Explore nossa linha completa de queijos e doces artesanais
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <SlidersHorizontal size={20} className="text-gray-600" />
-            <h2 className="text-lg">Filtros e Busca</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+   
+        <div
+          className="bg-white rounded-2xl p-5 mb-8"
+          style={{ boxShadow: '0 4px 16px rgba(74,46,31,0.07)' }}
+        >
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+     
+            <div className="relative flex-1 w-full">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2"
+                size={18}
+                style={{ color: '#a08060' }}
+              />
               <input
                 type="text"
                 placeholder="Buscar produtos..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4ECDC4] focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2.5 rounded-[30px] text-sm outline-none"
+                style={{
+                  border: '1.5px solid #e8dece',
+                  backgroundColor: '#F7F3E9',
+                  color: '#4A2E1F',
+                }}
               />
             </div>
 
-            {/* Category Filter */}
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value as 'all' | 'queijos' | 'doces')}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4ECDC4] focus:border-transparent"
-            >
-              <option value="all">Todas as Categorias</option>
-              <option value="queijos">Queijos</option>
-              <option value="doces">Doces</option>
-            </select>
 
-            {/* Sort */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'name' | 'price-asc' | 'price-desc')}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4ECDC4] focus:border-transparent"
-            >
-              <option value="name">Ordenar por Nome</option>
-              <option value="price-asc">Menor Preço</option>
-              <option value="price-desc">Maior Preço</option>
-            </select>
+            <div className="flex gap-2 flex-wrap">
+              {categories.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => setCategoryFilter(cat.value as typeof categoryFilter)}
+                  className="px-4 py-2 rounded-[30px] text-xs font-medium transition-colors"
+                  style={{
+                    backgroundColor: categoryFilter === cat.value ? '#2F6F4F' : '#F7F3E9',
+                    color: categoryFilter === cat.value ? '#ffffff' : '#4A2E1F',
+                    border: '1.5px solid',
+                    borderColor: categoryFilter === cat.value ? '#2F6F4F' : '#e8dece',
+                  }}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Results Count */}
-        <div className="mb-6 text-gray-600">
-          {filteredAndSortedProducts.length} {filteredAndSortedProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados'}
+  
+        <div className="mb-5 text-sm" style={{ color: '#8a6a55' }}>
+          {filteredAndSortedProducts.length}{' '}
+          {filteredAndSortedProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados'}
         </div>
 
-        {/* Products Grid */}
+
         {filteredAndSortedProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
             {filteredAndSortedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-gray-600 text-lg mb-4">Nenhum produto encontrado</p>
+            <p className="text-base mb-4" style={{ color: '#8a6a55' }}>Nenhum produto encontrado</p>
             <button
               onClick={() => {
                 setSearchQuery('');
                 setCategoryFilter('all');
               }}
-              className="text-[#4ECDC4] hover:underline"
+              className="text-sm font-medium hover:underline"
+              style={{ color: '#2F6F4F' }}
             >
               Limpar filtros
             </button>

@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import { MessageCircle } from 'lucide-react';
 import type { Product } from '../data/products';
 
 interface ProductCardProps {
@@ -7,13 +6,13 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const whatsappMessage = `Oi, gostaria de encomendar: ${product.name}`;
-  const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(whatsappMessage)}`;
-
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group animate-in fade-in slide-in-from-bottom-4" style={{ animationDuration: '500ms' }}>
-      <Link to={`/produto/${product.id}`} className="block">
-        <div className="aspect-square overflow-hidden bg-gray-100">
+    <div
+      className="bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+      style={{ boxShadow: '0 6px 20px rgba(74,46,31,0.09)' }}
+    >
+      <Link to={`/produto/${product.id}`} className="block overflow-hidden">
+        <div className="aspect-square overflow-hidden" style={{ backgroundColor: '#F7F3E9' }}>
           <img
             src={product.image}
             alt={product.name}
@@ -21,44 +20,27 @@ export function ProductCard({ product }: ProductCardProps) {
           />
         </div>
       </Link>
-      
-      <div className="p-5">
+
+      <div className="p-4">
         <Link to={`/produto/${product.id}`}>
-          <h3 className="text-xl mb-2 text-gray-900 hover:text-[#4ECDC4] transition-colors">
+          <h3
+            className="text-sm sm:text-base mb-1 hover:opacity-70 transition-opacity line-clamp-2 leading-snug h-10 sm:h-11 overflow-hidden"
+            style={{ fontFamily: "'Playfair Display', serif", color: '#4A2E1F' }}
+          >
             {product.name}
           </h3>
         </Link>
-        
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+
+        <p className="text-xs sm:text-sm mb-3 line-clamp-2" style={{ color: '#8a6a55' }}>
           {product.description}
         </p>
-        
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-2xl text-[#FF6B35]">
-            R$ {product.price.toFixed(2).replace('.', ',')}
-          </span>
-          <span className="text-xs text-gray-500 uppercase bg-gray-100 px-2 py-1 rounded">
-            {product.category}
-          </span>
-        </div>
-        
-        <div className="flex gap-2">
-          <Link
-            to={`/produto/${product.id}`}
-            className="flex-1 bg-[#4ECDC4] text-white px-4 py-2 rounded-lg hover:bg-[#45b8b0] transition-colors text-center"
-          >
-            Ver Detalhes
-          </Link>
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-[#25D366] text-white px-4 py-2 rounded-lg hover:bg-[#20BD5A] transition-colors flex items-center justify-center"
-            title="Encomendar via WhatsApp"
-          >
-            <MessageCircle size={20} />
-          </a>
-        </div>
+
+        <Link
+          to={`/produto/${product.id}`}
+          className="block w-full bg-[#6FBF8A] hover:bg-[#5AA876] text-white text-center text-xs sm:text-sm px-3 py-2 rounded-[30px] transition-colors font-medium"
+        >
+          Ver Detalhes
+        </Link>
       </div>
     </div>
   );
