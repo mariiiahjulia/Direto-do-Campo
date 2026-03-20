@@ -278,7 +278,7 @@ export const products: Product[] = [
     category: 'queijos',
     description: 'Requeijão cremoso artesanal. Também disponível na versão com orégano.',
     detailedDescription: 'Requeijão cremoso produzido com leite fresco, textura macia e espalhabilidade ideal. Disponível na versão tradicional e na versão temperada com orégano para um toque herbáceo. Perfeito para pães, torradas e receitas.',
-    image: new URL('../../imagens/RequeijaoCremosoMelhorFoto.jpg', import.meta.url).href,
+    image: new URL('../../imagens/RequeijaoCremosoMelhorFoto.JPG', import.meta.url).href,
     images: [
       new URL('../../imagens/RequeijaoCremosoTradicional.jpg', import.meta.url).href,
       new URL('../../imagens/RequeijaoCremosoOregano.jpg', import.meta.url).href,
