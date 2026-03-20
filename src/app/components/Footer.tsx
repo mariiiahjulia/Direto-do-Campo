@@ -44,7 +44,7 @@ export function Footer() {
             </h3>
             <div className="flex gap-3 mb-6">
               <a
-                href="https://instagram.com/direto_do_campo"
+                href="https://instagram.com/direto_do_campo._"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 rounded-full transition-colors hover:opacity-80"
